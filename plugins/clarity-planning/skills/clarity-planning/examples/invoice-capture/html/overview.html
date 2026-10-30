@@ -1,0 +1,161 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Invoice capture</title><style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--mut:#59636e;--card:#fff;--line:#d9d6cc;--acc:#1b5e8a;--chip:#eef3f7;--warn:#9a5b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15181c;--fg:#e6e8ea;--mut:#9aa4ae;--card:#1d2127;--line:#323941;--acc:#6db3e0;--chip:#25303a;--warn:#e0a85a}}
+:root[data-theme=dark]{--bg:#15181c;--fg:#e6e8ea;--mut:#9aa4ae;--card:#1d2127;--line:#323941;--acc:#6db3e0;--chip:#25303a;--warn:#e0a85a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 64px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 20px}nav a{padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;font-size:14px}
+nav a.on{background:var(--acc);border-color:var(--acc);color:#fff}
+h1{font-size:28px;margin:0 0 4px}h2{font-size:21px;margin:36px 0 8px;padding-top:8px;border-top:1px solid var(--line)}h3{font-size:17px;margin:22px 0 6px}h4,h5{margin:16px 0 4px}
+.sub{color:var(--mut);margin:0 0 16px}a{color:var(--acc)}
+.tw{overflow-x:auto;margin:10px 0}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}th{background:var(--chip)}
+code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:.9em}pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto}pre code{background:none;padding:0}
+blockquote{margin:10px 0;padding:6px 14px;border-left:4px solid var(--acc);background:var(--chip);border-radius:0 6px 6px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:10px 0}.card h3{margin:0 0 4px}
+.chip{display:inline-block;padding:1px 9px;border-radius:999px;background:var(--chip);font-size:12px;margin-right:4px}
+.missing{color:var(--warn);font-style:italic}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+</style></head><body><main><nav><a href="overview.html" class="on">Overview</a><a href="flows.html" class="">Flows and components</a><a href="plan.html" class="">Plan and risks</a></nav><h1>Invoice capture</h1><p class='sub'>Generated 2026-10-29 from the markdown docs. Edit the docs, not this page.</p><h2>Status by layer</h2><div class='tw'><table><thead><tr><th>Layer</th><th>Name</th><th>Gate</th><th>Docs</th></tr></thead><tbody>
+<tr><td>0</td><td>Intake and sizing</td><td>passed</td><td>1</td></tr>
+<tr><td>1</td><td>Outcome and value</td><td>passed</td><td>5</td></tr>
+<tr><td>2</td><td>World and facts</td><td>passed</td><td>3</td></tr>
+<tr><td>3</td><td>Risks, unknowns and decisions</td><td>passed</td><td>8</td></tr>
+<tr><td>4</td><td>User flow and re-entry points</td><td>passed</td><td>1</td></tr>
+<tr><td>5</td><td>Artifacts and staleness</td><td>passed</td><td>1</td></tr>
+<tr><td>6</td><td>Components</td><td>passed</td><td>4</td></tr>
+<tr><td>7</td><td>System flow</td><td>passed</td><td>1</td></tr>
+<tr><td>8</td><td>Cross-cutting concerns</td><td>passed</td><td>1</td></tr>
+<tr><td>9</td><td>Contracts</td><td>passed</td><td>1</td></tr>
+<tr><td>10</td><td>Implementation plan</td><td>passed</td><td>2</td></tr>
+<tr><td>11</td><td>Change protocol</td><td>in-progress</td><td>1</td></tr>
+</tbody></table></div>
+<h2>The feature in plain words <span class='chip'>agreed</span><span class='chip'>v1</span></h2><blockquote>This is a worked example. The product, people and numbers are invented, so you can see what the docs look like without any real company's data.</blockquote>
+<h3>In plain words</h3>
+<p>Accounts-payable clerks receive supplier invoices as PDFs. Today they retype the fields into the finance app, find the matching purchase order by eye, pick accounting codes from memory, and send the invoice to a manager for approval. After approval someone posts it to the ERP. This feature reads the invoice, proposes the supplier, purchase order and codes, and lets the clerk fix anything before it goes to the manager. Approved invoices post to the ERP without retyping.</p>
+<h3>Outcome in one sentence</h3>
+<p>Clerks get approved invoices into the ERP without retyping, and no invoice ever posts to the wrong place.</p>
+<h3>Who acts on the result, and what they do next</h3>
+<p>The <strong>clerk</strong> checks the proposed match and codes, fixes what is wrong and sends for approval. The <strong>manager</strong> approves or rejects. Nobody acts on the extracted fields alone; they only matter if the match and codes are right.</p>
+<h3>What would make them distrust it</h3>
+<p>One invoice posted to the wrong supplier or posted twice. Clerks said a single wrong posting would make them re-check everything by hand, which removes the benefit.</p>
+<h3>The valuable part</h3>
+<p>The <strong>match and the coding</strong>, not reading the fields. In CASE-01 the clerk typed the fields in under a minute but spent six minutes finding the purchase order and choosing codes.</p>
+<h3>Non-goals and anti-goals</h3>
+<ul><li>Non-goal: invoices arriving by email (parked, see the plan's deferred list).</li><li>Non-goal: more than one currency.</li><li>Anti-goal: an invoice posted twice, even if every other step works.</li></ul>
+<h3>What success looks like</h3>
+<ul><li>Hypothesis (to measure): at least 70% of invoices need only a confirm click from the clerk.</li><li>Zero wrong postings and zero duplicate postings in the pilot month.</li></ul>
+<h3>Size and depth</h3>
+<p>Size: large. Why: money is irreversible once posted, a language model reads the PDFs, and the ERP is another team's system. All layers run in full.</p>
+<h3>What already exists</h3>
+<p>Suppliers, purchase orders (POs) and roles exist in the finance app, and an ERP connector already handles payments. There is no invoice concept. Details in <code>10-world/existing-system.md</code>.</p>
+<h2>Worked cases</h2><div class='grid'><div class='card'><h3><a href='../00-start/cases/case-01.md'>Case clean match</a></h3><span class='chip'>CASE-01</span><span class='chip'>agreed</span><p>A straightforward invoice with a PO number, where the clerk spends most of the time on matching and coding</p></div><div class='card'><h3><a href='../00-start/cases/case-02.md'>Case partial delivery</a></h3><span class='chip'>CASE-02</span><span class='chip'>agreed</span><p>An invoice for 10 items when only 7 arrived, and the manager who is on leave</p></div><div class='card'><h3><a href='../00-start/cases/case-03.md'>Case no PO number</a></h3><span class='chip'>CASE-03</span><span class='chip'>agreed</span><p>An invoice with no PO number, where the clerk finds the PO by supplier and amount</p></div></div>
+<h2>Words we use <span class='chip'>agreed</span><span class='chip'>v1</span></h2><h3>In plain words</h3>
+<p>These are the terms clerks and managers actually use. "Match" and "post" are the two most often confused with each other.</p>
+<div class='tw'><table><thead><tr><th>Term</th><th>Means to the users</th><th>Record or trace it leaves</th><th>Not to be confused with</th></tr></thead><tbody><tr><td>Invoice</td><td>The supplier's bill, as a PDF</td><td>A stored PDF plus the fields we read from it</td><td>The purchase order</td></tr><tr><td>PO (purchase order)</td><td>What the company ordered and agreed to pay</td><td>A PO with lines in the finance app</td><td>An invoice; a PO can have several invoices</td></tr><tr><td>Match</td><td>Pairing an invoice with its supplier and the PO lines it bills</td><td>The match artifact (ART-02)</td><td>Posting</td></tr><tr><td>Coding</td><td>Choosing the accounting codes (account, cost centre) for each line</td><td>The coding artifact (ART-03)</td><td>Approval</td></tr><tr><td>GRN (goods received note)</td><td>Proof that goods arrived</td><td>A receipt record, for about 70% of deliveries</td><td>A PO</td></tr><tr><td>Post</td><td>Sending the approved invoice to the ERP</td><td>The posting record (ART-05)</td><td>Match, or approval</td></tr><tr><td>Void (an approval)</td><td>An approval that no longer counts because something it covered changed</td><td>The approval returns to the clerk</td><td>Reject, which is a manager's decision</td></tr></tbody></table></div>
+<h2>Decisions</h2><div class='grid'><div class='card'><h3><a href='../20-risks-and-decisions/decisions/D-001-matching-code-first.md'>Matching is code first; a person picks the leftovers</a></h3><span class='chip'>D-001</span><span class='chip'>agreed</span><span class='chip'>measured</span><p>Match with exact rules and show candidates for the rest; do not use a model for matching in version 1</p><p><strong>Choice:</strong> Match an invoice to a PO with exact rules. When the rules cannot decide, show the candidate POs with reasons and let the clerk pick. No model for matching in version 1.</p></div><div class='card'><h3><a href='../20-risks-and-decisions/decisions/D-002-check-before-post.md'>Check before posting, using our own key</a></h3><span class='chip'>D-002</span><span class='chip'>agreed</span><span class='chip'>hypothesis</span><p>Before each post, look up supplier plus invoice number in the ERP and refuse a second post</p><p><strong>Choice:</strong> Before posting, look up the supplier and invoice number in the ERP. If an entry exists, do not post; record the existing entry instead. Our key is supplier id plus invoice number.</p></div><div class='card'><h3><a href='../20-risks-and-decisions/decisions/D-003-approvals-in-product.md'>Approvals live in the product, not the ERP</a></h3><span class='chip'>D-003</span><span class='chip'>agreed</span><span class='chip'>hypothesis</span><p>Managers approve inside the finance app so delegation while on leave can be expressed and audited</p><p><strong>Choice:</strong> Approval is a step in the finance app, with delegation, and only an approved invoice is posted to the ERP.</p></div><div class='card'><h3><a href='../20-risks-and-decisions/decisions/D-004-approval-void-on-change.md'>An approval is void if what it covered changes</a></h3><span class='chip'>D-004</span><span class='chip'>agreed</span><span class='chip'>decided</span><p>If the amount, supplier, PO match, coding or cost centre changes after approval, the approval is void and the invoice returns to the clerk</p><p><strong>Choice:</strong> An approval covers the extracted fields, the match and the coding as they were when approved. If any of them changes afterwards, the approval is void and the invoice returns to the clerk for re-approval.</p></div></div>
+<h2>Open questions</h2>
+<div class='tw'><table><thead><tr><th>ID</th><th>Question</th><th>Owner</th><th>Recommended answer</th></tr></thead><tbody>
+<tr><td>Q-1</td><td>How long must invoice PDFs be kept?</td><td>Finance controller</td><td>Seven years; make it configurable</td></tr>
+<tr><td>Q-2</td><td>When bank details differ from the supplier record, block or only warn?</td><td>Finance controller</td><td>Block until a manager confirms</td></tr>
+</tbody></table></div>
+<h2>Reading paths</h2><p class='sub'>Open only the path that matches what you are doing.</p>
+<h3>onboard: A newcomer's first read (about 10 minutes)</h3><ul>
+<li><a href='../00-start/brief.md'>Invoice capture</a>: Clerks turn a supplier invoice PDF into an approved, posted ERP entry with as few corrections as possible</li>
+<li><a href='../00-start/cases/case-01.md'>Case clean match</a>: A straightforward invoice with a PO number, where the clerk spends most of the time on matching and coding</li>
+<li><a href='../00-start/cases/case-02.md'>Case partial delivery</a>: An invoice for 10 items when only 7 arrived, and the manager who is on leave</li>
+<li><a href='../00-start/cases/case-03.md'>Case no PO number</a>: An invoice with no PO number, where the clerk finds the PO by supplier and amount</li>
+<li><a href='../00-start/glossary.md'>Glossary</a>: The clerks' and managers' words for invoices, matching and coding, and which are easily confused</li>
+<li><a href='../30-behavior/user-flow.md'>User flow</a>: From PDF upload to posted invoice for the clerk and the manager, with five re-entry points the clerk can use</li>
+<li><a href='../50-plan/implementation-plan.md'>Implementation plan</a>: A walking skeleton on the three cases, then four slices in risk order, each with an exit check on stored inputs</li>
+</ul>
+<h3>understand: Understand the feature in plain words</h3><ul>
+<li><a href='../00-start/brief.md'>Invoice capture</a>: Clerks turn a supplier invoice PDF into an approved, posted ERP entry with as few corrections as possible</li>
+<li><a href='../00-start/cases/case-01.md'>Case clean match</a>: A straightforward invoice with a PO number, where the clerk spends most of the time on matching and coding</li>
+<li><a href='../00-start/cases/case-02.md'>Case partial delivery</a>: An invoice for 10 items when only 7 arrived, and the manager who is on leave</li>
+<li><a href='../00-start/cases/case-03.md'>Case no PO number</a>: An invoice with no PO number, where the clerk finds the PO by supplier and amount</li>
+<li><a href='../00-start/glossary.md'>Glossary</a>: The clerks' and managers' words for invoices, matching and coding, and which are easily confused</li>
+<li><a href='../30-behavior/user-flow.md'>User flow</a>: From PDF upload to posted invoice for the clerk and the manager, with five re-entry points the clerk can use</li>
+</ul>
+<h3>review: Review the plan before building</h3><ul>
+<li><a href='../90-log/gates.md'>Layer gates</a>: Layers 0 to 10 passed with evidence; layer 11 in use</li>
+<li><a href='../00-start/brief.md'>Invoice capture</a>: Clerks turn a supplier invoice PDF into an approved, posted ERP entry with as few corrections as possible</li>
+<li><a href='../10-world/constraints.md'>Constraints</a>: What cannot change (the ERP) versus what we chose and may redesign (approval limits, where approval lives)</li>
+<li><a href='../10-world/existing-system.md'>Existing system inventory</a>: What the finance app already has that invoice capture reuses, and the surprises found</li>
+<li><a href='../10-world/facts-register.md'>Facts register</a>: Seven facts the cases needed, with source, reliability and how we read each; one still unknown</li>
+<li><a href='../20-risks-and-decisions/decisions/D-001-matching-code-first.md'>Matching is code first; a person picks the leftovers</a>: Match with exact rules and show candidates for the rest; do not use a model for matching in version 1</li>
+<li><a href='../20-risks-and-decisions/decisions/D-002-check-before-post.md'>Check before posting, using our own key</a>: Before each post, look up supplier plus invoice number in the ERP and refuse a second post</li>
+<li><a href='../20-risks-and-decisions/decisions/D-003-approvals-in-product.md'>Approvals live in the product, not the ERP</a>: Managers approve inside the finance app so delegation while on leave can be expressed and audited</li>
+<li><a href='../20-risks-and-decisions/decisions/D-004-approval-void-on-change.md'>An approval is void if what it covered changes</a>: If the amount, supplier, PO match, coding or cost centre changes after approval, the approval is void and the invoice returns to the clerk</li>
+<li><a href='../20-risks-and-decisions/open-questions.md'>Open questions</a>: Policy questions only the finance controller can answer, each with our recommended default</li>
+<li><a href='../20-risks-and-decisions/risks.md'>Risks and unknowns</a>: Three ranked assumptions; matching by rules and duplicate posting were tested, scan quality is accepted</li>
+<li><a href='../20-risks-and-decisions/spikes/S-001-matching-accuracy.md'>Matching accuracy with rules only</a>: On 50 past invoices, exact rules matched 41 correctly and 0 wrongly; 9 were left for a person</li>
+<li><a href='../20-risks-and-decisions/spikes/S-002-erp-duplicate-behaviour.md'>ERP duplicate-post behaviour</a>: The ERP accepted the same invoice twice; a lookup by invoice number and supplier does find an earlier post</li>
+<li><a href='../30-behavior/user-flow.md'>User flow</a>: From PDF upload to posted invoice for the clerk and the manager, with five re-entry points the clerk can use</li>
+<li><a href='../30-behavior/artifacts.md'>Artifacts and what goes stale</a>: Five stored results, what the clerk can do to each, and what makes each stale; the table exposed the void-on-change rule</li>
+<li><a href='../40-design/components/C-coder.md'>Coder</a>: Proposes account and cost-centre codes for each invoice line (ART-03) from the supplier's coding history</li>
+<li><a href='../40-design/components/C-extractor.md'>Extractor</a>: Reads the PDF and produces the extracted fields (ART-01); a model, judged against hand-checked invoices</li>
+<li><a href='../40-design/components/C-matcher.md'>Matcher</a>: Finds the supplier and PO for an invoice (ART-02) with exact rules, and lists candidates when the rules cannot decide</li>
+<li><a href='../40-design/components/C-poster.md'>Poster</a>: Posts an approved invoice to the ERP once, checking first for an earlier post (ART-05)</li>
+<li><a href='../30-behavior/system-flow.md'>System flow</a>: How the four components run from the PDF or from any stored artifact, and how failure, duplicates and retries are handled</li>
+<li><a href='../40-design/cross-cutting.md'>Cross-cutting concerns</a>: A verdict and a consequence for each of 13 concerns; approval rights, audit of overrides, bank-detail handling and retention matter most</li>
+<li><a href='../40-design/contracts/K-erp-post.md'>ERP posting and lookup</a>: The post and lookup calls between the finance app and the ERP connector, with happy-path and duplicate examples</li>
+<li><a href='../50-plan/implementation-plan.md'>Implementation plan</a>: A walking skeleton on the three cases, then four slices in risk order, each with an exit check on stored inputs</li>
+</ul>
+<h3>build-component: Build or change one component</h3><ul>
+<li><a href='../10-world/existing-system.md'>Existing system inventory</a>: What the finance app already has that invoice capture reuses, and the surprises found</li>
+<li><a href='../10-world/facts-register.md'>Facts register</a>: Seven facts the cases needed, with source, reliability and how we read each; one still unknown</li>
+<li><a href='../30-behavior/artifacts.md'>Artifacts and what goes stale</a>: Five stored results, what the clerk can do to each, and what makes each stale; the table exposed the void-on-change rule</li>
+<li><a href='../40-design/components/C-coder.md'>Coder</a>: Proposes account and cost-centre codes for each invoice line (ART-03) from the supplier's coding history</li>
+<li><a href='../40-design/components/C-extractor.md'>Extractor</a>: Reads the PDF and produces the extracted fields (ART-01); a model, judged against hand-checked invoices</li>
+<li><a href='../40-design/components/C-matcher.md'>Matcher</a>: Finds the supplier and PO for an invoice (ART-02) with exact rules, and lists candidates when the rules cannot decide</li>
+<li><a href='../40-design/components/C-poster.md'>Poster</a>: Posts an approved invoice to the ERP once, checking first for an earlier post (ART-05)</li>
+<li><a href='../30-behavior/system-flow.md'>System flow</a>: How the four components run from the PDF or from any stored artifact, and how failure, duplicates and retries are handled</li>
+<li><a href='../50-plan/slices/SL-01-real-matcher.md'>Real matcher</a>: Replace the stub matcher with the rule-based one and prove 35 of 50 match with none wrong</li>
+</ul>
+<h3>contract: Work on a boundary with another team</h3><ul>
+<li><a href='../40-design/contracts/K-erp-post.md'>ERP posting and lookup</a>: The post and lookup calls between the finance app and the ERP connector, with happy-path and duplicate examples</li>
+</ul>
+<h3>change-request: A requirement changed: find what to reopen</h3><ul>
+<li><a href='../00-start/brief.md'>Invoice capture</a>: Clerks turn a supplier invoice PDF into an approved, posted ERP entry with as few corrections as possible</li>
+<li><a href='../10-world/constraints.md'>Constraints</a>: What cannot change (the ERP) versus what we chose and may redesign (approval limits, where approval lives)</li>
+<li><a href='../10-world/facts-register.md'>Facts register</a>: Seven facts the cases needed, with source, reliability and how we read each; one still unknown</li>
+<li><a href='../20-risks-and-decisions/decisions/D-001-matching-code-first.md'>Matching is code first; a person picks the leftovers</a>: Match with exact rules and show candidates for the rest; do not use a model for matching in version 1</li>
+<li><a href='../20-risks-and-decisions/decisions/D-002-check-before-post.md'>Check before posting, using our own key</a>: Before each post, look up supplier plus invoice number in the ERP and refuse a second post</li>
+<li><a href='../20-risks-and-decisions/decisions/D-003-approvals-in-product.md'>Approvals live in the product, not the ERP</a>: Managers approve inside the finance app so delegation while on leave can be expressed and audited</li>
+<li><a href='../20-risks-and-decisions/decisions/D-004-approval-void-on-change.md'>An approval is void if what it covered changes</a>: If the amount, supplier, PO match, coding or cost centre changes after approval, the approval is void and the invoice returns to the clerk</li>
+<li><a href='../20-risks-and-decisions/open-questions.md'>Open questions</a>: Policy questions only the finance controller can answer, each with our recommended default</li>
+<li><a href='../30-behavior/artifacts.md'>Artifacts and what goes stale</a>: Five stored results, what the clerk can do to each, and what makes each stale; the table exposed the void-on-change rule</li>
+<li><a href='../90-log/change-log.md'>Change log</a>: Every requirement change, which layers it reopened and what came of it</li>
+</ul>
+<h2>Every document</h2><div class='tw'><table><thead><tr><th>ID</th><th>Title</th><th>Layer</th><th>Status</th><th>Summary</th></tr></thead><tbody>
+<tr><td>BRIEF</td><td><a href='../00-start/brief.md'>Invoice capture</a></td><td>1</td><td>agreed</td><td>Clerks turn a supplier invoice PDF into an approved, posted ERP entry with as few corrections as possible</td></tr>
+<tr><td>CASE-01</td><td><a href='../00-start/cases/case-01.md'>Case clean match</a></td><td>1</td><td>agreed</td><td>A straightforward invoice with a PO number, where the clerk spends most of the time on matching and coding</td></tr>
+<tr><td>CASE-02</td><td><a href='../00-start/cases/case-02.md'>Case partial delivery</a></td><td>1</td><td>agreed</td><td>An invoice for 10 items when only 7 arrived, and the manager who is on leave</td></tr>
+<tr><td>CASE-03</td><td><a href='../00-start/cases/case-03.md'>Case no PO number</a></td><td>1</td><td>agreed</td><td>An invoice with no PO number, where the clerk finds the PO by supplier and amount</td></tr>
+<tr><td>GLOSSARY</td><td><a href='../00-start/glossary.md'>Glossary</a></td><td>1</td><td>agreed</td><td>The clerks' and managers' words for invoices, matching and coding, and which are easily confused</td></tr>
+<tr><td>CONSTRAINTS</td><td><a href='../10-world/constraints.md'>Constraints</a></td><td>2</td><td>agreed</td><td>What cannot change (the ERP) versus what we chose and may redesign (approval limits, where approval lives)</td></tr>
+<tr><td>EXISTING</td><td><a href='../10-world/existing-system.md'>Existing system inventory</a></td><td>2</td><td>agreed</td><td>What the finance app already has that invoice capture reuses, and the surprises found</td></tr>
+<tr><td>FACTS</td><td><a href='../10-world/facts-register.md'>Facts register</a></td><td>2</td><td>agreed</td><td>Seven facts the cases needed, with source, reliability and how we read each; one still unknown</td></tr>
+<tr><td>D-001</td><td><a href='../20-risks-and-decisions/decisions/D-001-matching-code-first.md'>Matching is code first; a person picks the leftovers</a></td><td>3</td><td>agreed</td><td>Match with exact rules and show candidates for the rest; do not use a model for matching in version 1</td></tr>
+<tr><td>D-002</td><td><a href='../20-risks-and-decisions/decisions/D-002-check-before-post.md'>Check before posting, using our own key</a></td><td>3</td><td>agreed</td><td>Before each post, look up supplier plus invoice number in the ERP and refuse a second post</td></tr>
+<tr><td>D-003</td><td><a href='../20-risks-and-decisions/decisions/D-003-approvals-in-product.md'>Approvals live in the product, not the ERP</a></td><td>3</td><td>agreed</td><td>Managers approve inside the finance app so delegation while on leave can be expressed and audited</td></tr>
+<tr><td>D-004</td><td><a href='../20-risks-and-decisions/decisions/D-004-approval-void-on-change.md'>An approval is void if what it covered changes</a></td><td>3</td><td>agreed</td><td>If the amount, supplier, PO match, coding or cost centre changes after approval, the approval is void and the invoice returns to the clerk</td></tr>
+<tr><td>QUESTIONS</td><td><a href='../20-risks-and-decisions/open-questions.md'>Open questions</a></td><td>3</td><td>agreed</td><td>Policy questions only the finance controller can answer, each with our recommended default</td></tr>
+<tr><td>RISKS</td><td><a href='../20-risks-and-decisions/risks.md'>Risks and unknowns</a></td><td>3</td><td>agreed</td><td>Three ranked assumptions; matching by rules and duplicate posting were tested, scan quality is accepted</td></tr>
+<tr><td>S-001</td><td><a href='../20-risks-and-decisions/spikes/S-001-matching-accuracy.md'>Matching accuracy with rules only</a></td><td>3</td><td>agreed</td><td>On 50 past invoices, exact rules matched 41 correctly and 0 wrongly; 9 were left for a person</td></tr>
+<tr><td>S-002</td><td><a href='../20-risks-and-decisions/spikes/S-002-erp-duplicate-behaviour.md'>ERP duplicate-post behaviour</a></td><td>3</td><td>agreed</td><td>The ERP accepted the same invoice twice; a lookup by invoice number and supplier does find an earlier post</td></tr>
+<tr><td>ARTIFACTS</td><td><a href='../30-behavior/artifacts.md'>Artifacts and what goes stale</a></td><td>5</td><td>agreed</td><td>Five stored results, what the clerk can do to each, and what makes each stale; the table exposed the void-on-change rule</td></tr>
+<tr><td>FLOW-SYSTEM</td><td><a href='../30-behavior/system-flow.md'>System flow</a></td><td>7</td><td>agreed</td><td>How the four components run from the PDF or from any stored artifact, and how failure, duplicates and retries are handled</td></tr>
+<tr><td>FLOW-USER</td><td><a href='../30-behavior/user-flow.md'>User flow</a></td><td>4</td><td>agreed</td><td>From PDF upload to posted invoice for the clerk and the manager, with five re-entry points the clerk can use</td></tr>
+<tr><td>C-coder</td><td><a href='../40-design/components/C-coder.md'>Coder</a></td><td>6</td><td>agreed</td><td>Proposes account and cost-centre codes for each invoice line (ART-03) from the supplier's coding history</td></tr>
+<tr><td>C-extractor</td><td><a href='../40-design/components/C-extractor.md'>Extractor</a></td><td>6</td><td>agreed</td><td>Reads the PDF and produces the extracted fields (ART-01); a model, judged against hand-checked invoices</td></tr>
+<tr><td>C-matcher</td><td><a href='../40-design/components/C-matcher.md'>Matcher</a></td><td>6</td><td>agreed</td><td>Finds the supplier and PO for an invoice (ART-02) with exact rules, and lists candidates when the rules cannot decide</td></tr>
+<tr><td>C-poster</td><td><a href='../40-design/components/C-poster.md'>Poster</a></td><td>6</td><td>agreed</td><td>Posts an approved invoice to the ERP once, checking first for an earlier post (ART-05)</td></tr>
+<tr><td>K-erp-post</td><td><a href='../40-design/contracts/K-erp-post.md'>ERP posting and lookup</a></td><td>9</td><td>agreed</td><td>The post and lookup calls between the finance app and the ERP connector, with happy-path and duplicate examples</td></tr>
+<tr><td>CROSSCUT</td><td><a href='../40-design/cross-cutting.md'>Cross-cutting concerns</a></td><td>8</td><td>agreed</td><td>A verdict and a consequence for each of 13 concerns; approval rights, audit of overrides, bank-detail handling and retention matter most</td></tr>
+<tr><td>PLAN</td><td><a href='../50-plan/implementation-plan.md'>Implementation plan</a></td><td>10</td><td>agreed</td><td>A walking skeleton on the three cases, then four slices in risk order, each with an exit check on stored inputs</td></tr>
+<tr><td>SL-01</td><td><a href='../50-plan/slices/SL-01-real-matcher.md'>Real matcher</a></td><td>10</td><td>agreed</td><td>Replace the stub matcher with the rule-based one and prove 35 of 50 match with none wrong</td></tr>
+<tr><td>CHANGELOG</td><td><a href='../90-log/change-log.md'>Change log</a></td><td>11</td><td>agreed</td><td>Every requirement change, which layers it reopened and what came of it</td></tr>
+<tr><td>GATES</td><td><a href='../90-log/gates.md'>Layer gates</a></td><td>0</td><td>agreed</td><td>Layers 0 to 10 passed with evidence; layer 11 in use</td></tr>
+<tr><td>SESSIONS</td><td><a href='../90-log/sessions.md'>Session notes</a></td><td>0</td><td>draft</td><td>What was covered in each planning session and the first step for the next one</td></tr>
+</tbody></table></div></main></body></html>

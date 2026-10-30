@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>When you are stuck or unsure</title>
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--mut:#59636e;--card:#fff;--line:#d9d6cc;--acc:#1b5e8a;--chip:#eef3f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15181c;--fg:#e6e8ea;--mut:#9aa4ae;--card:#1d2127;--line:#323941;--acc:#6db3e0;--chip:#25303a}}
+:root[data-theme=dark]{--bg:#15181c;--fg:#e6e8ea;--mut:#9aa4ae;--card:#1d2127;--line:#323941;--acc:#6db3e0;--chip:#25303a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 72px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+nav a{padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;font-size:14px}
+nav a.on{background:var(--acc);border-color:var(--acc);color:#fff}
+h1{font-size:30px;margin:0 0 6px}
+h2{font-size:22px;margin:40px 0 8px;padding-top:10px;border-top:1px solid var(--line)}
+h3{font-size:17px;margin:0 0 4px}
+.lede{font-size:18px;color:var(--mut);margin:0 0 8px}
+a{color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card p{margin:4px 0 0;color:var(--mut);font-size:15px}
+.tw{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+code{background:var(--chip);padding:1px 6px;border-radius:4px;font-size:.9em}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chips button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer;font:inherit;font-size:14px}
+.chips button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+.probe{display:none}.probe.show{display:block}
+.callout{border-left:4px solid var(--acc);background:var(--chip);padding:10px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.bad{color:#b4412f}.good{color:#2f7d4f}
+@media (prefers-color-scheme:dark){.bad{color:#e58a78}.good{color:#6cc08a}}
+ol.steps{padding-left:22px}ol.steps li{margin:6px 0}
+</style>
+</head>
+<body>
+<main>
+<nav>
+  <a href="how-it-works.html">How it works</a>
+  <a class="on" href="stuck-and-uncertain.html">When you are stuck or unsure</a>
+  <a href="../examples/invoice-capture/html/overview.html">A finished example</a>
+</nav>
+
+<h1>When you are stuck or unsure</h1>
+<p class="lede">Most planning time goes to not knowing what to ask or what to do when an answer is missing. The skill carries that load: it picks the next question and has a move ready for each kind of uncertainty.</p>
+
+<h2>Deciding what to ask next</h2>
+<p>Nobody can name the question that matters while they do not yet know what they do not know. The skill uses six steps instead of asking you to define requirements.</p>
+<ol class="steps">
+  <li><b>Scan the state.</b> What is unknown, what the current layer's check still lacks, what contradicts what, and what you said that has no home yet.</li>
+  <li><b>Rank by value of information.</b> Prefer the unknown whose answer would change the most downstream, that is late and costly to find, and that it cannot look up itself.</li>
+  <li><b>Look it up first.</b> Code, docs, tickets, history and real data are its job. You are asked only for decisions, preferences, and facts only you hold.</li>
+  <li><b>Generate from a probe</b> if nothing comes to mind (below).</li>
+  <li><b>Shape the question:</b> specific to your project, one idea, with a recommended answer you can accept with "yes", and a line on what the answer would change.</li>
+  <li><b>Know when to stop:</b> when the check is met, or the remaining unknowns are cheap and recorded with a default.</li>
+</ol>
+
+<h3 style="margin-top:22px">Probes: turn something vague into a specific question</h3>
+<div class="chips" id="chips" role="group" aria-label="Probe type">
+  <button data-k="concrete" aria-pressed="true">Make it concrete</button>
+  <button data-k="facts" aria-pressed="false">Find hidden facts</button>
+  <button data-k="edges" aria-pressed="false">Find the edges</button>
+  <button data-k="scope" aria-pressed="false">Find the real scope</button>
+  <button data-k="owner" aria-pressed="false">Find the decider</button>
+  <button data-k="risk" aria-pressed="false">Find the risk</button>
+</div>
+<div class="probe show" data-k="concrete"><div class="tw"><table><thead><tr><th>Use when</th><th>Ask</th></tr></thead><tbody>
+<tr><td>They talk in abstractions</td><td>"Walk me through the last time this actually happened. What did you open first?"</td></tr>
+<tr><td>The goal is fuzzy</td><td>"If I handed you the perfect result for that case, what would be on it?"</td></tr>
+<tr><td>You need the shape of the data</td><td>"Can you show me a real one?"</td></tr>
+<tr><td>You suspect hidden rules</td><td>"What do you check by hand before you trust it?"</td></tr>
+</tbody></table></div></div>
+<div class="probe" data-k="facts"><div class="tw"><table><thead><tr><th>Use when</th><th>Ask</th></tr></thead><tbody>
+<tr><td>A fact is assumed</td><td>"Where would I look to find that, and who puts it there?"</td></tr>
+<tr><td>A field might be missing</td><td>"At what moment does that get filled in? Is it ever late, wrong or blank?"</td></tr>
+<tr><td>Someone says "usually"</td><td>"Out of ten, how many are right?" (then measure it)</td></tr>
+<tr><td>A word is used twice</td><td>"You said 'account' twice. Is it the same thing both times?"</td></tr>
+<tr><td>Something might already exist</td><td>"Has anyone built something like this here? What happened to it?"</td></tr>
+</tbody></table></div></div>
+<div class="probe" data-k="edges"><div class="tw"><table><thead><tr><th>Use when</th><th>Ask</th></tr></thead><tbody>
+<tr><td>A rule sounds absolute</td><td>"Is there a case where that does not hold?"</td></tr>
+<tr><td>You need the quality bar</td><td>"What would make you stop trusting this? What is the worst wrong answer?"</td></tr>
+<tr><td>A step could fail</td><td>"What if it stops at step three? What state is the user left in?"</td></tr>
+<tr><td>A value could be corrected</td><td>"If they fix that value afterwards, what else should change?"</td></tr>
+<tr><td>Experts will want to bypass</td><td>"Is there a user who already knows this and would skip that step?"</td></tr>
+<tr><td>Concurrency or repeats</td><td>"What if two people do this at once? What if the same request arrives twice?"</td></tr>
+</tbody></table></div></div>
+<div class="probe" data-k="scope"><div class="tw"><table><thead><tr><th>Use when</th><th>Ask</th></tr></thead><tbody>
+<tr><td>Everything feels necessary</td><td>"If this were missing at launch, what could the user not do?"</td></tr>
+<tr><td>The plan is large</td><td>"What is the smallest version someone would actually use on Monday?"</td></tr>
+<tr><td>A nice-to-have appears</td><td>"Can this wait without blocking anything else?"</td></tr>
+</tbody></table></div></div>
+<div class="probe" data-k="owner"><div class="tw"><table><thead><tr><th>Use when</th><th>Ask</th></tr></thead><tbody>
+<tr><td>You are stuck on a choice</td><td>"Whose call is this? Can we get an answer by Friday? What if not?"</td></tr>
+<tr><td>It might be reversible</td><td>"If we choose wrong, how hard is it to undo?" (cheap to reverse: pick and go)</td></tr>
+<tr><td>People disagree</td><td>"What result would make us confident? Can we get it in a day?"</td></tr>
+</tbody></table></div></div>
+<div class="probe" data-k="risk"><div class="tw"><table><thead><tr><th>Use when</th><th>Ask</th></tr></thead><tbody>
+<tr><td>Everything seems too smooth</td><td>"It is six months later and this failed. What is the most likely reason?"</td></tr>
+<tr><td>You need to rank risks</td><td>"Which single step, if wrong, makes the rest worthless?"</td></tr>
+<tr><td>Data or systems are unseen</td><td>"What are we assuming that we have not looked at?"</td></tr>
+</tbody></table></div></div>
+
+<h3>Good question versus bad question</h3>
+<div class="tw"><table><tbody>
+<tr><td class="bad"><b>Bad</b></td><td>"What are your non-functional requirements?"</td></tr>
+<tr><td class="good"><b>Good</b></td><td>"Will two clerks ever work on the same invoice at the same time? If so I'd lock it for whoever opens it first. Does that match how you work?"</td></tr>
+</tbody></table></div>
+
+<h2>Uncertain situations the skill has a move for</h2>
+<p>Each has a signal, a first move, and a rule for what gets written down so the uncertainty stays visible.</p>
+<div class="tw"><table>
+<thead><tr><th>Situation</th><th>First move</th><th>It records</th></tr></thead>
+<tbody>
+<tr><td>You do not know what you want</td><td>Show two or three concrete versions to react to, or walk a recent real case</td><td>The cases; the chosen version as a hypothesis</td></tr>
+<tr><td>You want a spec or code right now</td><td>Do the ten-minute version of each skipped layer and say the risk that remains</td><td>A skip with a reason; the leftover risks</td></tr>
+<tr><td>The person who knows is away</td><td>Write the question with a recommended default and proceed on it</td><td>An open question with an owner; a tripwire on dependent decisions</td></tr>
+<tr><td>No access to real data</td><td>Make access the first spike; keep the design cheap to change</td><td>Facts marked unknown or inferred; a high-scored risk</td></tr>
+<tr><td>Docs and the real system disagree</td><td>Trust observation, note the date</td><td>A "behaves differently" row and a measured fact</td></tr>
+<tr><td>A spec or a build already exists</td><td>Treat both as hypotheses; reconcile by measurement on fixed inputs</td><td>A divergence table: spec says, code does, result, choice</td></tr>
+<tr><td>Two designs look equally good</td><td>Find the assumption that separates them and test it cheaply; if reversible, pick the simpler</td><td>A decision with alternatives and what would change it</td></tr>
+<tr><td>A later layer breaks an earlier one</td><td>Say so, run the impact command, reopen the earlier layer</td><td>A change-log row; bumped versions; updated pins</td></tr>
+<tr><td>Scope keeps growing</td><td>Ask "what breaks if we leave it out?" and cut by that</td><td>A deferred list with revisit triggers</td></tr>
+<tr><td>The docs are getting unwieldy</td><td>Split by purpose and link; give each child a reading path</td><td>New small docs; an index that stays accurate</td></tr>
+<tr><td>You say "this is too much process"</td><td>Shrink to the small size; keep the brief, one case, the flow and the plan</td><td>Skipped layers with reasons</td></tr>
+</tbody></table></div>
+<div class="callout"><b>The general rule:</b> say what you do not know, say how you would find out and how long that takes, give a default you would proceed with, and write all three down. Uncertainty that is written down is a plan. Uncertainty that stays silent becomes a surprise in week six.</div>
+
+<h2>Where this is written down for the model</h2>
+<p><code>references/next-question-engine.md</code> holds the six steps and every probe. <code>references/uncertainty-playbook.md</code> holds the full list of situations. Each layer's guide in <code>references/layers/</code> ends with a "when it goes sideways" section for that layer.</p>
+</main>
+<script>
+(function(){
+  var btns=document.querySelectorAll('#chips button');
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+    document.querySelectorAll('.probe').forEach(function(p){p.classList.toggle('show',p.getAttribute('data-k')===b.dataset.k);});
+  });});
+})();
+</script>
+</body>
+</html>

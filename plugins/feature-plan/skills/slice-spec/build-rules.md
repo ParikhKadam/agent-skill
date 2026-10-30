@@ -1,0 +1,14 @@
+# Build rules for the builder (a person or a coding agent)
+
+These travel with every slice spec. Each rule says why, because a rule understood is a rule followed when the case is not the one the rule imagined.
+
+1. **Understand before changing.** Inspect the existing implementation, find what can be reused, and learn the patterns and dependencies between the modules you touch. Do not invent new architecture without a stated reason. Why: most over-engineering starts from not having looked.
+2. **Plan small before editing.** Write down the files to inspect, the files expected to change, the smallest implementation that meets the demo, the tests and verification steps, and the non-goals. Why: a plan you can read in a minute is one you can check against the diff afterwards.
+3. **Prevent over-engineering.** Prefer the simplest maintainable solution and reuse existing abstractions. No speculative abstraction or infrastructure, no interface, factory, wrapper or service layer that a current requirement does not need, no unrelated refactor, no future-proofing for hypothetical needs. A new dependency needs a justification unless the program plan already names it. Why: tests prove behaviour, not good design, and an agent can satisfy the words while building too much.
+4. **Control the scope of the change.** Keep the change on the requested behaviour. Explain why each file outside the spec's list changes. Ask the owning engineer before adding a new architectural abstraction or widening the agreed scope; a broader change is a plan change, not a quiet edit. Why: scope creep is invisible until review.
+5. **Verify behaviour.** Add or update meaningful tests and run them. Never weaken a test to make the code pass. The slice's pass line is judged on the answer key, which the builder did not write. Why: a test bent to fit the code proves nothing.
+6. **Review the design as a separate step,** after the demo passes. Look for unnecessary complexity, duplicated functionality, poor module boundaries, excessive coupling, patterns that do not match the rest of the code, and dead code or dependencies. Why: reviewing while building reinforces your own assumptions.
+7. **Simplify.** Ask whether the same behaviour can be reached with a simpler design. Remove complexity that nothing justifies, without giving up correctness, security or maintainability, then run the demo and tests again.
+8. **Report completion.** Say what changed, why the design is appropriate, which abstractions you introduced and why, which tests and checks you ran, and what concerns remain. Never claim success without the demo having run. Why: an honest report is how the owner decides whether to trust the slice.
+
+Stop and ask when a significant assumption proves wrong, a hard-to-change decision turns out to be unmade, or the work needs a file or dependency the spec did not list.

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How clarity-planning works</title>
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--mut:#59636e;--card:#fff;--line:#d9d6cc;--acc:#1b5e8a;--chip:#eef3f7;--ok:#2f7d4f;--dim:.38}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15181c;--fg:#e6e8ea;--mut:#9aa4ae;--card:#1d2127;--line:#323941;--acc:#6db3e0;--chip:#25303a;--ok:#6cc08a}}
+:root[data-theme=dark]{--bg:#15181c;--fg:#e6e8ea;--mut:#9aa4ae;--card:#1d2127;--line:#323941;--acc:#6db3e0;--chip:#25303a;--ok:#6cc08a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 72px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+nav a{padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;font-size:14px}
+nav a.on{background:var(--acc);border-color:var(--acc);color:#fff}
+h1{font-size:30px;margin:0 0 6px}
+h2{font-size:22px;margin:40px 0 8px;padding-top:10px;border-top:1px solid var(--line)}
+h3{font-size:17px;margin:0 0 4px}
+.lede{font-size:18px;color:var(--mut);margin:0 0 8px}
+a{color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card p{margin:4px 0 0;color:var(--mut);font-size:15px}
+.tw{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+tr.off td{opacity:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:6px 0 10px}
+.seg button{background:var(--card);color:var(--fg);border:0;padding:7px 16px;cursor:pointer;font:inherit;font-size:14px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--acc);color:#fff}
+code{background:var(--chip);padding:1px 6px;border-radius:4px;font-size:.9em}
+.chip{display:inline-block;padding:1px 9px;border-radius:999px;background:var(--chip);font-size:12px;margin-right:4px}
+.callout{border-left:4px solid var(--acc);background:var(--chip);padding:10px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+pre{background:var(--chip);padding:12px 14px;border-radius:8px;overflow-x:auto;font-size:13.5px;line-height:1.5}
+ol.steps{padding-left:22px}ol.steps li{margin:6px 0}
+</style>
+</head>
+<body>
+<main>
+<nav>
+  <a class="on" href="how-it-works.html">How it works</a>
+  <a href="stuck-and-uncertain.html">When you are stuck or unsure</a>
+  <a href="../examples/invoice-capture/html/overview.html">A finished example</a>
+</nav>
+
+<h1>Clarity-first planning</h1>
+<p class="lede">A planning partner that helps you understand a feature before you document it, and keeps what you learn in small, linkable docs that are easy to change.</p>
+
+<h2>Why it exists</h2>
+<p>Three things go wrong again and again when a team plans a feature by writing a detailed spec first.</p>
+<div class="grid">
+  <div class="card"><h3>The world was not what was assumed</h3><p>Fields that do not exist, data half-filled, an old test copy of a system. Nobody checked until the build was far along.</p></div>
+  <div class="card"><h3>Guesses were written as decisions</h3><p>The spec said how autonomous a model should be, and the build later moved to plain code. Nothing could say which was better.</p></div>
+  <div class="card"><h3>One-shot build</h3><p>When intermediate results are not stored, users cannot redo one part, and nobody can build, test or improve one piece alone.</p></div>
+</div>
+<div class="callout">The skill's answer: get clarity first, in a fixed order, with a check (a <b>gate</b>) at each step, and write docs that explain why, not only what.</div>
+
+<h2>What a session looks like</h2>
+<ol class="steps">
+  <li><b>Orient.</b> It reads your code and docs, finds or creates a planning folder, and restates the outcome and size back to you for a yes.</li>
+  <li><b>Ask a round.</b> Every question that is unblocked now (usually around ten), grouped by theme, each with its recommended answer worded so "yes" accepts it. It looks up what it can instead of asking you.</li>
+  <li><b>Record.</b> What it learned goes into the right small doc, with a status: decided, hypothesis, unknown or measured.</li>
+  <li><b>Check the gate.</b> When the layer's check is met it summarizes in plain words, shows the evidence, and asks you to agree.</li>
+  <li><b>Hand back.</b> What is now understood, what is open (with owners and defaults), and the first step next time.</li>
+</ol>
+
+<h2>Stages you can run on their own</h2>
+<p>The layers are grouped into stage skills. Each can be invoked by itself. They depend on each other only through the planning folder: an earlier stage writes docs and passes gates, and a later stage reads them. Say "plan this feature" and the hub runs the stages in order, asking you before each new stage. Name a stage and it runs alone, first checking whether the earlier layers are settled.</p>
+<div class="tw"><table>
+<thead><tr><th>Skill</th><th>Layers</th><th>Needs first</th><th>Writes</th></tr></thead>
+<tbody>
+<tr><td><code>plan-clarity</code></td><td>0-3</td><td>nothing</td><td>brief, glossary, cases, facts, constraints, risks, spikes, decisions, open questions</td></tr>
+<tr><td><code>plan-components</code></td><td>4-6</td><td>clarity</td><td>user flow with re-entry points, artifacts and staleness, one doc per component</td></tr>
+<tr><td><code>plan-flows</code></td><td>7-9</td><td>components</td><td>system flow, cross-cutting verdicts, one doc per contract</td></tr>
+<tr><td><code>plan-build</code></td><td>10</td><td>flows</td><td>skeleton, slices with exit checks, deferred list, rollout</td></tr>
+<tr><td><code>plan-change</code></td><td>11</td><td>any time</td><td>triage of new information, reopened layers, change log</td></tr>
+<tr><td><code>clarity-planning</code></td><td>hub</td><td>-</td><td>routes stages; holds the shared tool, templates and guides</td></tr>
+</tbody></table></div>
+<p>If a stage is invoked before its prerequisites pass, it tells you what is still open and what that risks. You choose to go back, or to proceed with the gaps recorded as hypotheses. No layer is marked done without your explicit yes. When something cannot be checked yet (no data access, the other team unreachable), you can pass a step <em>with conditions</em>; each condition becomes early work in the build plan.</p>
+
+<h2>The twelve layers</h2>
+<p>Pick a size to see which layers run. Small features skip most; large ones run all of them in full. The order is by <em>cost of being wrong times uncertainty</em>, which is why facts and risks come before flows.</p>
+<div class="seg" role="group" aria-label="Feature size">
+  <button data-size="small" aria-pressed="false">Small</button>
+  <button data-size="medium" aria-pressed="true">Medium</button>
+  <button data-size="large" aria-pressed="false">Large</button>
+</div>
+<div class="tw"><table id="layers">
+<thead><tr><th>#</th><th>Layer</th><th>It answers</th><th>You can move on when</th></tr></thead>
+<tbody>
+<tr data-s="1" data-m="1" data-l="1"><td>0</td><td>Intake and sizing</td><td>What is the outcome in one sentence? How big is it? What exists already?</td><td>You agree with the restatement and the size</td></tr>
+<tr data-s="1" data-m="1" data-l="1"><td>1</td><td>Outcome and value</td><td>Who acts on the result? What would make them distrust it? Which part carries the value?</td><td>Two or three real cases have a hand-written ideal result you recognize</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>2</td><td>World and facts</td><td>For each fact needed: where it lives, who writes it, how reliable, how we read it</td><td>Every fact has a source and a status, or is on the unknowns list</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>3</td><td>Risks, unknowns, decisions</td><td>Which assumption breaks the design if wrong? Who owns the open decisions?</td><td>Top risks are tested or accepted; open decisions have owners and defaults</td></tr>
+<tr data-s="1" data-m="1" data-l="1"><td>4</td><td>User flow and re-entry</td><td>What does the user do, and where can they see, fix, redo or skip?</td><td>Each case runs through the story with no gap</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>5</td><td>Artifacts and staleness</td><td>Which intermediate results are stored, and what makes each stale?</td><td>Every re-entry has an artifact; every stale rule has a decided behavior</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>6</td><td>Components</td><td>What produces each artifact? Who decides inside: code, model or person?</td><td>Each runs alone from stored inputs and has a quality bar and test set</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>7</td><td>System flow</td><td>How do components run from any start point? What happens on failure and duplicates?</td><td>Every start point runs; every failure has a visible outcome</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>8</td><td>Cross-cutting concerns</td><td>Access, tenancy, audit, encryption, retention, cost, rollout: which apply?</td><td>Every concern has a verdict with a reason</td></tr>
+<tr data-s="0" data-m="0" data-l="1"><td>9</td><td>Contracts</td><td>What exactly crosses each boundary between teams or systems?</td><td>Stubs on both sides exchange the examples (medium: only if a boundary exists)</td></tr>
+<tr data-s="1" data-m="1" data-l="1"><td>10</td><td>Implementation plan</td><td>What do we build first, and how do we know each step works?</td><td>A thin skeleton plus risk-ordered slices, each with an exit check</td></tr>
+<tr data-s="0" data-m="1" data-l="1"><td>11</td><td>Change protocol</td><td>When a requirement changes, what gets reopened?</td><td>The impact command works; the change log is in use</td></tr>
+</tbody></table></div>
+<p class="chip" id="depthnote"></p>
+
+<h2>Where the docs live: a hierarchy, not one long document</h2>
+<p>One feature gets one folder of small docs grouped by what a reader wants to know. Nobody reads everything: each doc names the <em>reading paths</em> it belongs to, and a generated index lists every doc.</p>
+<pre>docs/planning/&lt;feature&gt;/
+  INDEX.md              every doc, with summary, status, version and what it rests on
+  html/                 three reading pages for people who do not open markdown
+  00-start/             brief, glossary, hand-written cases      (what and why)
+  10-world/             facts register, existing system, limits   (what is true outside our design)
+  20-risks-and-decisions/  risks, spikes, one file per decision, open questions
+  30-behavior/          user flow, artifacts and staleness, system flow
+  40-design/            one file per component, cross-cutting, one file per contract
+  50-plan/              implementation plan, one file per slice
+  90-log/               layer gates, change log, session notes</pre>
+<div class="grid">
+  <div class="card"><h3>Reading paths</h3><p><code>onboard</code> (10 minutes), <code>understand</code>, <code>review</code>, <code>build-component</code>, <code>contract</code>, <code>change-request</code>. Ask for one and get just those docs.</p></div>
+  <div class="card"><h3>The index</h3><p>Generated, never hand-edited. Status by layer, reading paths, every doc, decisions by confidence, open questions with owners, and a health list.</p></div>
+  <div class="card"><h3>Staleness by pins</h3><p>Each doc records the version of what it rests on. Change one doc and the checker lists every doc written against the old version.</p></div>
+</div>
+
+<h2>What makes the docs different</h2>
+<div class="tw"><table>
+<thead><tr><th>Usual spec</th><th>These docs</th></tr></thead>
+<tbody>
+<tr><td>States: "Actions are capped at 8."</td><td>Explains: why 8, what evidence, what would change it.</td></tr>
+<tr><td>Everything reads as decided.</td><td>Every claim carries a status: decided, hypothesis, unknown, measured.</td></tr>
+<tr><td>Organized by section number.</td><td>Organized by what a reader wants to know; each doc has a one-line summary for the index.</td></tr>
+<tr><td>One long file.</td><td>Many small files, one decision, component or contract each, with stable ids.</td></tr>
+<tr><td>Rewritten when requirements move.</td><td>Edited in place; an impact command lists what to reopen; the change is logged.</td></tr>
+</tbody></table></div>
+
+<h2>The tools</h2>
+<p>A small script, <code>scripts/wsctl.py</code>, handles the mechanical parts so the conversation can stay on understanding. It uses only the Python standard library.</p>
+<div class="tw"><table>
+<thead><tr><th>Command</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>init</code>, <code>new</code></td><td>Create a workspace sized small, medium or large; add a decision, spike, component, contract, case or slice from a template</td></tr>
+<tr><td><code>status</code></td><td>Which layer you are on, what is open, what may be stale</td></tr>
+<tr><td><code>check</code></td><td>Lint: re-entry points with no artifact, components with no quality bar, contracts with no failure example, decisions with no tripwire, layers passed without evidence</td></tr>
+<tr><td><code>index</code>, <code>html</code></td><td>Write the detailed index and the three reading pages</td></tr>
+<tr><td><code>read-set</code>, <code>impact</code></td><td>List the few docs needed for one purpose; list every doc that rests on a changed doc</td></tr>
+</tbody></table></div>
+
+<h2>See it working</h2>
+<p>The folder <code>examples/invoice-capture/</code> is a finished workspace for an invented feature (invoice capture with approval and ERP posting). Open its <a href="../examples/invoice-capture/html/overview.html">overview page</a>, <a href="../examples/invoice-capture/html/flows.html">flows page</a> and <a href="../examples/invoice-capture/html/plan.html">plan page</a> to see what the generated pages look like. It passes the checker with no warnings.</p>
+</main>
+<script>
+(function(){
+  var rows=document.querySelectorAll('#layers tbody tr');
+  var note={small:'Small: layers 0, 1, 4 and 10, a few lines each. Never skip the cases or an exit check.',medium:'Medium: all layers, kept short, with one spike on the top risk. Contracts only if a boundary exists.',large:'Large: every layer in full, a spike per top risk, contracts with stubs, a quality bar per component.'};
+  var key={small:'s',medium:'m',large:'l'};
+  function set(sz){
+    rows.forEach(function(r){r.classList.toggle('off',r.getAttribute('data-'+key[sz])==='0');});
+    document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.size===sz?'true':'false');});
+    document.getElementById('depthnote').textContent=note[sz];
+    try{localStorage.setItem('cp-size',sz);}catch(e){}
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){set(b.dataset.size);});});
+  var s='medium';try{s=localStorage.getItem('cp-size')||'medium';}catch(e){}
+  set(note[s]?s:'medium');
+})();
+</script>
+</body>
+</html>

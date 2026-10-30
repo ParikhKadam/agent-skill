@@ -1,0 +1,19 @@
+{
+  "name": "agent-skill",
+  "owner": { "name": "parikhkadam" },
+  "metadata": {
+    "description": "Skills, plugins and agent config by ParikhKadam"
+  },
+  "plugins": [
+    {
+      "name": "clarity-planning",
+      "source": "./plugins/clarity-planning",
+      "description": "Clarity-first feature planning: hub plus stage skills (clarity, components, flows, build, change, review) with a workspace tool, templates and guides."
+    },
+    {
+      "name": "feature-plan",
+      "source": "./plugins/feature-plan",
+      "description": "Draft: single-skill planning from idea to demo-shaped slices (feature-plan), plus slice-spec to write and build one slice."
+    }
+  ]
+}

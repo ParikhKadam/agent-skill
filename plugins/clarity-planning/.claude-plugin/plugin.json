@@ -1,0 +1,7 @@
+{
+  "name": "clarity-planning",
+  "version": "0.1.0",
+  "description": "Clarity-first feature planning: hub plus stage skills (clarity, components, flows, build, change, review) with a workspace tool, templates and guides.",
+  "author": { "name": "parikhkadam" },
+  "keywords": ["planning", "design", "spec", "workflow"]
+}

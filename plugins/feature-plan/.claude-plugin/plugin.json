@@ -1,0 +1,7 @@
+{
+  "name": "feature-plan",
+  "version": "0.1.0",
+  "description": "Draft: single-skill planning from idea to demo-shaped slices (feature-plan), plus slice-spec to write and build one slice.",
+  "author": { "name": "parikhkadam" },
+  "keywords": ["planning", "spec", "slices"]
+}
